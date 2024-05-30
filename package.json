@@ -1,0 +1,19 @@
+{
+  "name": "@blockcode/core",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun-build",
+    "dev": "bun-build --watch ./src"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "bun-build": "link:bun-build",
+    "bun-loader-css": "link:bun-loader-css"
+  },
+  "dependencies": {
+    "@eo-locale/preact": "^1.7.2",
+    "localforage": "^1.10.0",
+    "preact": "^10.18.1"
+  }
+}
