@@ -91,10 +91,18 @@ export function useLocale() {
 
 export function LocalesProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const handleError = (err) => {
+    if (DEVELOPMENT) {
+      console.error(`${err.message}: "${err.id}" in "${err.language}"`);
+    }
+  };
+
   return (
     <TranslationsProvider
       language={state.language}
       locales={state.locales}
+      onError={handleError}
     >
       <LocalesContext.Provider value={{ state, dispatch }}>{children}</LocalesContext.Provider>
     </TranslationsProvider>

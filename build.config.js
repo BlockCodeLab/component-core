@@ -15,6 +15,9 @@ export default {
   naming: {
     asset: 'assets/[name]-[hash].[ext]',
   },
+  define: {
+    DEVELOPMENT: JSON.stringify(Bun.env.BUN_ENV !== 'production'),
+  },
   plugins: [CSSLoader()],
   external: ['preact', 'preact/hooks', `preact/jsx-${isRelease ? '' : 'dev-'}runtime`],
 };
