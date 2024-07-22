@@ -26,7 +26,7 @@ const initialState = {
   editor: null,
   assetList: [],
   fileList: [],
-  selectedIndex: -1,
+  selectedFileId: null,
   device: null,
   modified: false,
 };
@@ -44,6 +44,9 @@ const reducer = (state, action) => {
       if (!action.payload.editor) {
         action.payload.editor = state.editor;
       }
+      if (!action.payload.key) {
+        action.payload.key = Date.now().toString(36);
+      }
       return Object.assign({}, initialState, action.payload);
     case SET_PROJECT_NAME:
       return {
@@ -55,29 +58,32 @@ const reducer = (state, action) => {
       return {
         ...state,
         fileList: state.fileList.concat(action.payload),
-        selectedIndex: state.fileList.length,
+        selectedFileId: action.payload.id,
         modified: true,
       };
     case OPEN_FILE:
       return {
         ...state,
-        selectedIndex: action.payload,
+        selectedFileId: action.payload,
       };
     case DELETE_FILE:
+      let index = state.fileList.findIndex((file) => file.id === action.payload);
+      if (index === -1) return state;
+      const fileList = state.fileList.filter((file) => file.id !== action.payload);
+      if (index >= fileList.length) {
+        index = fileList.length - 1;
+      }
       return {
         ...state,
-        fileList: state.fileList.filter((_, i) => i !== action.payload),
-        selectedIndex:
-          action.payload > state.selectedIndex || state.fileList.length - 1 > state.selectedIndex
-            ? state.selectedIndex
-            : state.selectedIndex - 1,
+        fileList,
+        selectedFileId: fileList[index].id,
         modified: true,
       };
     case MODIFY_FILE:
       return {
         ...state,
-        fileList: state.fileList.map((file, i) => {
-          if (action.payload.id ? file.id === action.payload.id : i === state.selectedIndex) {
+        fileList: state.fileList.map((file) => {
+          if (action.payload.id ? file.id === action.payload.id : file.id === state.selectedFileId) {
             return {
               ...file,
               ...action.payload,
@@ -166,18 +172,15 @@ export function useEditor() {
       dispatch({ type: ADD_FILE, payload: newFile });
     },
 
-    openFile(index) {
-      if (index < 0 || index > state.fileList.length - 1) {
+    openFile(id) {
+      if (state.fileList.findIndex((file) => file.id === id) === -1) {
         throw Error('File does not exist');
       }
-      dispatch({ type: OPEN_FILE, payload: index });
+      dispatch({ type: OPEN_FILE, payload: id });
     },
 
-    deleteFile(index) {
-      if (index < 0 || index > state.fileList.length - 1) {
-        throw Error('File does not exist');
-      }
-      dispatch({ type: DELETE_FILE, payload: index });
+    deleteFile(id) {
+      dispatch({ type: DELETE_FILE, payload: id });
     },
 
     renameFile(name) {
@@ -188,7 +191,7 @@ export function useEditor() {
     },
 
     modifyFile(data) {
-      if (state.fileList.find((file, i) => (data.id ? file.id === data.id : i === state.selectedIndex))) {
+      if (state.fileList.find((file) => (data.id ? file.id === data.id : file.id === state.selectedFileId))) {
         dispatch({ type: MODIFY_FILE, payload: data });
       } else {
         throw Error('File does not exists');
