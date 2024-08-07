@@ -140,6 +140,26 @@ const reducer = (state, action) => {
   }
 };
 
+const autoRename = (items, name) => {
+  name = name.trim();
+  if (items.find((file) => file.name === name)) {
+    const nameStr = name.replace(/\d+$/, '');
+    const nameRe = new RegExp(`${nameStr}(\\d+)$`);
+    let nameNum = 0;
+    for (const data of items) {
+      const result = nameRe.exec(data.name);
+      if (result) {
+        const num = parseInt(result[1]);
+        if (num > nameNum) {
+          nameNum = num;
+        }
+      }
+    }
+    name = `${nameStr}${nameNum + 1}`;
+  }
+  return name;
+};
+
 export function useEditor() {
   const { state, dispatch } = useContext(EditorContext);
 
@@ -150,12 +170,12 @@ export function useEditor() {
       dispatch({ type: CLOSE_PROJECT });
     },
 
-    async openProject(project) {
-      if (typeof project === 'stirng') {
-        project = await localForage.getItem(key);
+    async openProject(data) {
+      if (typeof data === 'stirng') {
+        data = await localForage.getItem(key);
       }
-      if (project) {
-        dispatch({ type: OPEN_PROJECT, payload: project });
+      if (data) {
+        dispatch({ type: OPEN_PROJECT, payload: data });
       } else {
         throw new Error(`${key} does not exist.`);
       }
@@ -165,11 +185,14 @@ export function useEditor() {
       dispatch({ type: SET_PROJECT_NAME, payload: name });
     },
 
-    addFile(newFile) {
-      if (state.fileList.find((file) => file.id === newFile.id)) {
+    addFile(data) {
+      if (state.fileList.find((file) => file.id === data.id)) {
         throw Error('File already exists');
       }
-      dispatch({ type: ADD_FILE, payload: newFile });
+      if (data.name) {
+        data.name = autoRename(state.fileList, data.name);
+      }
+      dispatch({ type: ADD_FILE, payload: data });
     },
 
     openFile(id) {
@@ -183,15 +206,11 @@ export function useEditor() {
       dispatch({ type: DELETE_FILE, payload: id });
     },
 
-    renameFile(name) {
-      if (state.fileList.find((file) => file.name === name)) {
-        // TODO: rename
-      }
-      dispatch({ type: MODIFY_FILE, payload: { name } });
-    },
-
     modifyFile(data) {
       if (state.fileList.find((file) => (data.id ? file.id === data.id : file.id === state.selectedFileId))) {
+        if (data.name) {
+          data.name = autoRename(state.fileList, data.name);
+        }
         dispatch({ type: MODIFY_FILE, payload: data });
       } else {
         throw Error('File does not exists');
@@ -200,8 +219,11 @@ export function useEditor() {
 
     addAsset(data) {
       if (state.assetList.find((asset) => asset.id === data.id)) {
-        dispatch({ type: MODIFY_ASSET, payload: data });
+        throw Error('Asset already exists');
       } else {
+        if (data.name) {
+          data.name = autoRename(state.assetList, data.name);
+        }
         dispatch({ type: ADD_ASSET, payload: data });
       }
     },
@@ -213,18 +235,14 @@ export function useEditor() {
       dispatch({ type: DELETE_ASSET, payload: assetIds });
     },
 
-    renameAsset(data) {
-      if (state.assetList.find((asset) => asset.name === data.name)) {
-        // TODO: rename
-      }
-      dispatch({ type: MODIFY_ASSET, payload: data });
-    },
-
     modifyAsset(data) {
       if (state.assetList.find((asset) => asset.id === data.id)) {
+        if (data.name) {
+          data.name = autoRename(state.assetList, data.name);
+        }
         dispatch({ type: MODIFY_ASSET, payload: data });
       } else {
-        dispatch({ type: ADD_ASSET, payload: data });
+        throw Error('Asset does not exists');
       }
     },
 
