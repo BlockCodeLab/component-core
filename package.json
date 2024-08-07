@@ -8,8 +8,8 @@
   },
   "devDependencies": {
     "bun-types": "latest",
-    "bun-build": "link:bun-build",
-    "bun-loader-css": "link:bun-loader-css"
+    "bun-build": "github:kankungyip/bun-build",
+    "bun-loader-css": "github:kankungyip/bun-loader-css"
   },
   "dependencies": {
     "@eo-locale/preact": "^1.7.2",
