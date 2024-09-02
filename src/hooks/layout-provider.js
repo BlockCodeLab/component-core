@@ -1,5 +1,6 @@
 import { createContext } from 'preact';
 import { useContext, useReducer } from 'preact/hooks';
+import { clearHotkeys } from '../lib/hotkey';
 
 const SET_SPLASH = 'SET_SPLASH';
 const CREATE_ALERT = 'CREATE_ALERT';
@@ -138,6 +139,7 @@ export function useLayout() {
     },
 
     clearLayout() {
+      clearHotkeys();
       dispatch({ type: CLEAR_LAYOUT });
     },
 

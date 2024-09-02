@@ -142,11 +142,14 @@ const KeysOrder = {
 const Hotkeys = new Map();
 
 export function setHotkey(hotkey, handler) {
-  Hotkeys.set(hotkey, handler);
+  Hotkeys.set(hotkey.join('-'), handler);
 }
 
 export function showHotkey(hotkey) {
   const keysName = [];
+  if (typeof hotkey === 'string') {
+    hotkey = hotkey.split('-');
+  }
   hotkey.forEach((key) => {
     if (KeysOrder.hasOwnProperty(key)) {
       keysName[KeysOrder[key]] = KeysSymbol[key];
@@ -155,6 +158,10 @@ export function showHotkey(hotkey) {
     }
   });
   return keysName.filter((key) => key).join(isMac ? '' : '+');
+}
+
+export function clearHotkeys() {
+  Hotkeys.clear();
 }
 
 window.addEventListener('keydown', (e) => {
@@ -177,9 +184,15 @@ window.addEventListener('keydown', (e) => {
       }
       return false;
     };
+
+    if (typeof hotkey === 'string') {
+      hotkey = hotkey.split('-');
+    }
     if (hotkey.every(testKey) && typeof handler === 'function') {
       e.preventDefault();
-      handler();
+      try {
+        handler();
+      } catch (err) {}
     }
   });
 });
