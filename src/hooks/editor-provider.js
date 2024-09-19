@@ -1,6 +1,7 @@
 import localForage from 'localforage';
 import { createContext } from 'preact';
 import { useContext, useReducer } from 'preact/hooks';
+import { saveFile, openFile } from '../lib/project-file';
 
 const CLOSE_PROJECT = 'CLOSE_PROJECT';
 const OPEN_PROJECT = 'OPEN_PROJECT';
@@ -254,13 +255,13 @@ export function useEditor() {
       dispatch({ type: CONFIG_EDITOR, payload: config });
     },
 
-    async saveNow(onFilter) {
+    async saveNow(onSave) {
       const modifiedDate = Date.now();
       const key = state.key || modifiedDate.toString(36);
       const { name, editor, assetList, fileList } = state;
       const result = await localForage.setItem(
         key,
-        onFilter({
+        onSave({
           key,
           name,
           assetList,
@@ -275,6 +276,27 @@ export function useEditor() {
       return result;
     },
 
+    async saveToComputer(onSave) {
+      const modifiedDate = Date.now();
+      const key = state.key || modifiedDate.toString(36);
+      const { name, editor, assetList, fileList } = state;
+      const { thumb, ...project } = onSave({
+        name,
+        assetList,
+        fileList,
+        editor: {
+          package: editor.package,
+        },
+      });
+      await localForage.setItem(key, { key, thumb, modifiedDate, ...project });
+      dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
+      return await saveFile(project);
+    },
+
+    async openFromComputer(onOpen) {
+      onOpen(await openFile(), state.editor?.package);
+    },
+
     setModified(modified) {
       dispatch({ type: SAVE_DATA, payload: { modified } });
     },
@@ -285,7 +307,8 @@ export function useEditor() {
         result.push({
           key,
           name: value.name,
-          image: value.thumb,
+          thumb: value.thumb,
+          editor: value.editor,
           modifiedDate: value.modifiedDate,
         });
       });
