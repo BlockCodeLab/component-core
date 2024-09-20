@@ -294,7 +294,7 @@ export function useEditor() {
     },
 
     async openFromComputer(onOpen) {
-      onOpen(await openFile(), state.editor?.package);
+      onOpen(await openFile());
     },
 
     setModified(modified) {
