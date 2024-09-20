@@ -16,7 +16,7 @@ export async function saveFile(projectJson) {
   zip.file('project.json', JSON.stringify(projectJson));
 
   const blob = await zip.generateAsync({ type: 'blob' });
-  exportFile(blob, `${projectJson.name}.bcp`);
+  exportFile(blob, `${projectJson.name || 'project'}.bcp`);
 }
 
 export function openFile() {
