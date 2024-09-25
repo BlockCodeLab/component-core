@@ -48,7 +48,10 @@ export function useLocale() {
       return text;
     }
     if (text.props.children) {
-      return text.props.children.map((child) => maybeTranslate(child)).join('');
+      return []
+        .concat(text.props.children)
+        .map((child) => maybeTranslate(child))
+        .join('');
     }
     return translate(text.props.id, text.props);
   };
