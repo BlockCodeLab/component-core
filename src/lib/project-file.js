@@ -16,7 +16,7 @@ export async function saveFile(projectJson) {
   zip.file('project.json', JSON.stringify(projectJson));
 
   const blob = await zip.generateAsync({ type: 'blob' });
-  exportFile(blob, `${projectJson.name || 'project'}.bcp`);
+  exportFile(blob, `${projectJson.name || 'BlockCode Project'}.bcp`);
 }
 
 export function openFile() {
@@ -40,6 +40,11 @@ export function openFile() {
         const asset = projectJson.assetList[key];
         const data = await zip.file(`${asset.id}.png`).async('base64');
         projectJson.assetList[key] = { data, ...asset };
+      }
+      if (!projectJson.name) {
+        const nameParts = file.name.split('.');
+        nameParts.pop();
+        projectJson.name = nameParts.join('.');
       }
       resolve(projectJson);
     });
