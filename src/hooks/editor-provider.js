@@ -42,9 +42,7 @@ const reducer = (state, action) => {
     case CLOSE_PROJECT:
       return Object.assign({}, initialState);
     case OPEN_PROJECT:
-      if (!action.payload.editor) {
-        action.payload.editor = state.editor;
-      }
+      if (!action.payload.editor) return;
       if (!action.payload.key) {
         action.payload.key = Date.now().toString(36);
       }
@@ -299,6 +297,10 @@ export function useEditor() {
 
     setModified(modified) {
       dispatch({ type: SAVE_DATA, payload: { modified } });
+    },
+
+    setData(data) {
+      dispatch({ type: SAVE_DATA, payload: data });
     },
 
     async listProjects() {
