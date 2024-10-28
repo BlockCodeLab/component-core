@@ -11,6 +11,9 @@ const CREATE_LAYOUT = 'CREATE_LAYOUT';
 const SELECT_TAB = 'SELECT_TAB';
 const ADD_TABS = 'ADD_TABS';
 const SHOW_STORE_LIBRARY = 'SHOW_STORE_LIBRARY';
+const MACOS_MENUBAR_STYLE = 'MACOS_MENUBAR_STYLE';
+
+const isMac = /Mac/i.test(navigator.platform || navigator.userAgent);
 
 const initialState = {
   splash: false,
@@ -24,11 +27,12 @@ const initialState = {
   selectedTabIndex: -1,
   canEditProjectName: false,
   storeLibrary: false,
+  macosMenubarStyle: isMac && window.electron,
 };
 
 export const LayoutContext = createContext({
   state: Object.assign({}, initialState),
-  dispatch: () => {},
+  dispatch: () => { },
 });
 
 const reducer = (state, action) => {
@@ -85,6 +89,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         storeLibrary: action.payload,
+      };
+    case MACOS_MENUBAR_STYLE:
+      return {
+        ...state,
+        macosMenubarStyle: action.payload,
       };
     default:
       return state;
@@ -153,6 +162,10 @@ export function useLayout() {
 
     setStoreLibrary(display) {
       dispatch({ type: SHOW_STORE_LIBRARY, payload: display });
+    },
+
+    setMacosMenubarStyle(value) {
+      dispatch({ type: MACOS_MENUBAR_STYLE, payload: value });
     },
   };
 }
