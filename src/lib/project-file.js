@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import mime from 'mime/lite';
 import { exportFile } from './export-file';
 
 export async function saveFile(projectJson) {
@@ -6,13 +7,13 @@ export async function saveFile(projectJson) {
 
   if (projectJson.assetList) {
     projectJson.assetList = projectJson.assetList.map(({ data, ...asset }) => {
-      if (data && asset.type.startsWith('image/')) {
-        zip.file(`${asset.id}.png`, data, { base64: true });
+      if (data) {
+        const extname = mime.getExtension(asset.type);
+        zip.file(`${asset.id}.${extname}`, data, { base64: true });
       }
       return asset;
     });
   }
-  // console.log(projectJson);
   zip.file('project.json', JSON.stringify(projectJson));
 
   const blob = await zip.generateAsync({ type: 'blob' });
@@ -29,7 +30,10 @@ export function openFile() {
     fileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       const zip = await JSZip.loadAsync(file);
-      const projectRaw = await zip.file('project.json').async('string');
+      const projectRaw = await zip.file('project.json')?.async('string');
+      if (!projectRaw) {
+        reject('not found "project.json"');
+      }
       let projectJson;
       try {
         projectJson = JSON.parse(projectRaw);
@@ -38,8 +42,11 @@ export function openFile() {
       }
       for (const key in projectJson.assetList) {
         const asset = projectJson.assetList[key];
-        const data = await zip.file(`${asset.id}.png`).async('base64');
-        projectJson.assetList[key] = { data, ...asset };
+        const extname = mime.getExtension(asset.type);
+        const data = await zip.file(`${asset.id}.${extname}`)?.async('base64');
+        if (data) {
+          projectJson.assetList[key] = { data, ...asset };
+        }
       }
       if (!projectJson.name) {
         const nameParts = file.name.split('.');

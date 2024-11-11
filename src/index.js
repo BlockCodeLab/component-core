@@ -1,6 +1,10 @@
 import './css/global.css';
 import './css/typography.css';
 
+import mime from 'mime/lite';
+import JSZip from 'jszip';
+
+export { mime, JSZip };
 export { Text, DateTime, Numeric } from '@eo-locale/preact';
 
 export { exportFile } from './lib/export-file';
