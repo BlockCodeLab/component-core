@@ -32,15 +32,25 @@ const initialState = {
 
 export const LayoutContext = createContext({
   state: Object.assign({}, initialState),
-  dispatch: () => { },
+  dispatch: () => {},
 });
 
 const reducer = (state, action) => {
   switch (action.type) {
     case CREATE_LAYOUT:
-      return Object.assign({}, initialState, { splash: state.splash }, action.payload);
+      return Object.assign(
+        {},
+        initialState,
+        {
+          splash: state.splash,
+          macosMenubarStyle: state.macosMenubarStyle,
+        },
+        action.payload,
+      );
     case CLEAR_LAYOUT:
-      return Object.assign({}, initialState);
+      return Object.assign({}, initialState, {
+        macosMenubarStyle: state.macosMenubarStyle,
+      });
     case SET_SPLASH:
       return {
         ...state,
@@ -165,6 +175,7 @@ export function useLayout() {
     },
 
     setMacosMenubarStyle(value) {
+      console.log(value);
       dispatch({ type: MACOS_MENUBAR_STYLE, payload: value });
     },
   };

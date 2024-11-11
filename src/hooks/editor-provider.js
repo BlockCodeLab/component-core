@@ -288,7 +288,7 @@ export function useEditor() {
       });
       await localForage.setItem(key, { key, thumb, modifiedDate, ...project });
       dispatch({ type: SAVE_DATA, payload: { key, modified: false } });
-      return await saveFile(project);
+      await saveFile(project);
     },
 
     async openFromComputer(onOpen) {
