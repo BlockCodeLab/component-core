@@ -42,7 +42,7 @@ const reducer = (state, action) => {
         {},
         initialState,
         {
-          splash: state.splash,
+          splash: true,
           macosMenubarStyle: state.macosMenubarStyle,
         },
         action.payload,
