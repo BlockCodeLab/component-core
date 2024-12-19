@@ -1,22 +1,18 @@
-@import 'color.css';
-@import 'units.css';
-@import 'z-index.css';
+@import './colors.css';
+@import './units.css';
+@import './z-index.css';
 
-/* inspired by scratch-gui */
 html,
 body,
 #root {
-  /* probably unecessary, transitional until layout is refactored */
   width: 100%;
   height: 100%;
   margin: 0;
 
-  /* Setting min height/width makes the UI scroll below those sizes */
   min-width: var(--min-width);
   min-height: var(--min-height);
 }
 
-/* @todo: move globally? Safe / side FX, for blocks particularly? */
 * {
   box-sizing: border-box;
   user-select: none;

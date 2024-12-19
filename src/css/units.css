@@ -1,4 +1,3 @@
-/* inspired by scratch-gui */
 :root {
   --space: 0.5rem;
 
@@ -16,8 +15,8 @@
 
   --form-radius: calc(var(--space) / 2);
 
-  --min-width: 1024px;
-  --min-height: 640px;
+  --min-width: 1080px;
+  --min-height: 720px;
 
   --menu-bar-standard-font-size: var(--standard-font-size);
   --menu-bar-large-font-size: 0.875rem;

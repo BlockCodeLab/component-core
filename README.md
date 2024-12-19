@@ -1,13 +1,3 @@
-# @blockcode/core
+# 核心模块
 
-To install dependencies:
-
-```bash
-bun install
-```
-
-To development:
-
-```bash
-bun run dev
-```
+包含核心全局状态机、标准UI、主题样式定义等。
