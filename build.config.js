@@ -4,6 +4,6 @@ import colors from './src/css/colors.toml';
 const srcDir = resolve(import.meta.dir, 'src');
 
 export default {
-  entrypoints: [resolve(srcDir, 'index.js'), resolve(srcDir, 'io.js')],
+  entrypoints: [resolve(srcDir, 'index.js')],
   theme: colors,
 };

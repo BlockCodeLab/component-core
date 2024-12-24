@@ -4,17 +4,6 @@
   "version": "1.0.0",
   "type": "module",
   "module": "./dist/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    },
-    "./io": {
-      "import": "./dist/io.js"
-    },
-    "./ui": {
-      "import": "./dist/ui.js"
-    }
-  },
   "dependencies": {
     "@eo-locale/preact": "^1.7.2",
     "@popperjs/core": "^2.11.8",

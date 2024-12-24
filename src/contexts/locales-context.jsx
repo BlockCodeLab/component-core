@@ -73,7 +73,10 @@ export function maybeTranslate(message, translator) {
 //
 const LocalesContext = createContext();
 
-export const useLocalesContext = () => useContext(LocalesContext);
+export const useLocalesContext = () =>
+  Object.assign(useContext(LocalesContext), {
+    translator: useTranslator(),
+  });
 
 export function LocalesProvider({ children }) {
   return (

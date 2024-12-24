@@ -2,7 +2,7 @@ import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { batch, signal } from '@preact/signals';
 import { isMac, nanoid } from '@blockcode/utils';
-import { clearHotkeys } from '../io';
+import { clearHotkeys } from '../lib/io/hotkey';
 
 // Splash 可见
 //

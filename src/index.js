@@ -4,8 +4,6 @@ import './css/typography.css';
 // 主题颜色
 export { default as themeColor } from './css/colors.toml';
 
-export { useTranslator } from '@eo-locale/preact';
-
 export {
   LocalesProvider,
   useLocalesContext,
@@ -84,3 +82,7 @@ export { Spinner } from './components/spinner/spinner';
 export { ToggleButtons } from './components/toggle-buttons/toggle-buttons';
 
 export { Tooltip } from './components/tooltip/tooltip';
+
+export { Keys, setHotkey, showHotkey, clearHotkeys } from './lib/io/hotkey';
+
+export { Serial } from './lib/io/serial';

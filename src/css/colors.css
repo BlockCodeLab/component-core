@@ -2,6 +2,7 @@
   --ui-primary: token('ui.primary');
   --ui-secondary: token('ui.secondary');
   --ui-tertiary: token('ui.tertiary');
+  --ui-light: token('ui.light');
   --ui-transparent: hsla(0, 100%, 100%, 0);
 
   --ui-white: hsla(0, 100%, 100%, 1);
@@ -30,6 +31,9 @@
   --error-secondary: token('ui.error.secondary');
 
   --blocks-primary: token('blocks.primary');
+  --blocks-secondary: token('blocks.secondary');
+  --blocks-tertiary: token('blocks.tertiary');
+  --blocks-transparent: color(from var(--blocks-primary) srgb r g b / 0.35);
 
   --blocks-motion-primary: token('blocks.motion.primary');
   --blocks-looks-primary: token('blocks.looks.primary');
